@@ -49,8 +49,6 @@ const filter_reducer = (state, action) => {
 
     let tempProducts = [...filtered_products]
 
-    console.log(tempProducts)
-
     if (sort === "price-lowest") {
       tempProducts = tempProducts.sort((a, b) => a.price - b.price)
     }
@@ -66,6 +64,21 @@ const filter_reducer = (state, action) => {
     return {
       ...state,
       filtered_products: tempProducts,
+    }
+  }
+
+  if (action.type === UPDATE_FILTERS) {
+    const { name, value } = action.payload
+
+    return {
+      ...state,
+      filters: { ...state.filters, [name]: value },
+    }
+  }
+
+  if (action.type === FILTER_PRODUCTS) {
+    return {
+      ...state,
     }
   }
 
