@@ -70,6 +70,18 @@ export const FilterProvider = ({ children }) => {
       value = e.target.textContent
     }
 
+    if (name === "color") {
+      value = e.target.dataset.color
+    }
+
+    if (name === "price") {
+      value = Number(value)
+    }
+
+    if (name === "shipping") {
+      value = e.target.checked
+    }
+
     dispatch({
       type: UPDATE_FILTERS,
       payload: { name, value },
@@ -77,7 +89,9 @@ export const FilterProvider = ({ children }) => {
   }
 
   const clearFilters = (e) => {
-    console.log("sdas")
+    dispatch({
+      type: CLEAR_FILTERS,
+    })
   }
 
   return (
