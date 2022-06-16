@@ -2,8 +2,8 @@ import React from "react"
 import { GiCompass, GiDiamondHard, GiStabbedNote } from "react-icons/gi"
 
 export const SHIPPING_FEE = 534 //in cents
-export const GST_RATE = 0.05 //in cents
-export const PST_RATE = 0.07 //in cents
+export const GST_RATE = 5 //in cents
+export const PST_RATE = 7 //in cents
 
 export const links = [
   {
