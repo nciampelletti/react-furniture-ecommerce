@@ -65,11 +65,15 @@ const cart_reducer = (state, action) => {
           }
         }
         return { ...cartItem, amount: newAmount }
-      } else {
-        return cartItem
       }
+
+      return cartItem
     })
     return { ...state, cart: tempCart }
+  }
+
+  if (action.type === CLEAR_CART) {
+    return { ...state, cart: [] }
   }
 
   if (action.type === COUNT_CART_TOTALS) {
