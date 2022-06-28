@@ -7,18 +7,23 @@ import {
   Elements,
   useElements,
 } from "@stripe/react-stripe-js"
+
 import axios from "axios"
+
 import { useCartContext } from "../context/cart_context"
 import { useUserContext } from "../context/user_context"
+
 import { formatPrice } from "../utils/helpers"
-import { Navigate, useHistory } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
 
 const CheckoutForm = () => {
-  const { cart, total_amount, shipping_fee, clearCart } = useCartContext()
+  const { cart, total_amount, shipping_fee, clearCart, gst_rate, pst_rate } =
+    useCartContext()
+
   const { myUser } = useUserContext()
-  // const history = useHistory()
+
   // STRIPE STUFF
   const [succeeded, setSucceeded] = useState(false)
   const [error, setError] = useState(null)
@@ -48,14 +53,25 @@ const CheckoutForm = () => {
 
   const createPaymentIntent = async () => {
     try {
+      const gst_total = (total_amount * gst_rate) / 100
+      const pst_total = (total_amount * pst_rate) / 100
+
       const { data } = await axios.post(
         "/.netlify/functions/create-payment-intent",
-        JSON.stringify({ cart, shipping_fee, total_amount })
+        JSON.stringify({
+          cart,
+          shipping_fee,
+          gst_total,
+          pst_total,
+          total_amount,
+        })
       )
+      //console.log(data)
+      console.log(data.clientSecret)
 
       setClientSecret(data.clientSecret)
     } catch (error) {
-      // console.log(error.response)
+      console.log(error.response)
     }
   }
 
@@ -68,6 +84,7 @@ const CheckoutForm = () => {
     setDisabled(event.empty)
     setError(event.error ? event.error.message : "")
   }
+
   const handleSubmit = async (ev) => {
     ev.preventDefault()
     setProcessing(true)
@@ -102,7 +119,15 @@ const CheckoutForm = () => {
       ) : (
         <article>
           <h4>Hello, {myUser && myUser.name}</h4>
-          <p>Your total is {formatPrice(shipping_fee + total_amount)}</p>
+          <p>
+            Your total is{" "}
+            {formatPrice(
+              shipping_fee +
+                total_amount +
+                (total_amount * gst_rate) / 100 +
+                (total_amount * pst_rate) / 100
+            )}
+          </p>
           <p>Test Card Number : 4242 4242 4242 4242</p>
         </article>
       )}
@@ -125,7 +150,7 @@ const CheckoutForm = () => {
         )}
         {/* Show  a success message upon completion */}
         <p className={succeeded ? "result-message" : "result-message hidden"}>
-          Payment succedded, see the result in your
+          Payment succeeded, see the result in your
           <a href={`https://dashboard.stripe.com/test/payments`}>
             Stripe dasboard.
           </a>
