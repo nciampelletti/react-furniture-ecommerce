@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { loadStripe } from "@stripe/stripe-js"
 import {
@@ -14,7 +15,6 @@ import { useCartContext } from "../context/cart_context"
 import { useUserContext } from "../context/user_context"
 
 import { formatPrice } from "../utils/helpers"
-import { Navigate } from "react-router-dom"
 
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
 
@@ -32,6 +32,8 @@ const CheckoutForm = () => {
   const [clientSecret, setClientSecret] = useState("")
   const stripe = useStripe()
   const elements = useElements()
+
+  const navigate = useNavigate()
 
   const cardStyle = {
     style: {
@@ -103,7 +105,7 @@ const CheckoutForm = () => {
       setTimeout(() => {
         clearCart()
         // history.push("/")
-        Navigate("/")
+        navigate("/")
       }, 10000)
     }
   }

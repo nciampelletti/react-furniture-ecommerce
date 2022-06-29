@@ -30,8 +30,18 @@ function App() {
 
           <Route
             path='/checkout'
-            element={<PrivateRoute component={Checkout} />}
+            element={
+              <PrivateRoute>
+                <Checkout />
+              </PrivateRoute>
+            }
           />
+
+          {/* 
+          <Route
+            path='/checkout'
+            element={<PrivateRoute component={Checkout} />}
+          /> */}
           <Route path='/*' element={<Error />} />
         </Routes>
         <Footer />
