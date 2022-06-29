@@ -1,5 +1,8 @@
 ## Notes
 
+deployed: https://ciampelletti-store.netlify.app/
+
+
 #### Older React Version
 
 ```
